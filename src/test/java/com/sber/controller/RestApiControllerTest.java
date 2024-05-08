@@ -11,7 +11,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 @SpringBootTest
@@ -41,7 +43,7 @@ class RestApiControllerTest {
             """;
 
     @BeforeEach
-    void setUp() {
+    void setUp() throws Exception {
         mockMvc = MockMvcBuilders.standaloneSetup(new RestApiController(productRepository)).build();
     }
 
@@ -57,19 +59,41 @@ class RestApiControllerTest {
                 .andExpect(status().isNotFound());
     }
 
+//    @Test
+//    void getProductById() throws Exception {
+//        mockMvc.perform(MockMvcRequestBuilders.get("/products/0bc1978c-a219-4ccc-adfc-3157910002df"))
+//                .andExpect(status().isOk());
+//    }
+
     @Test
-    void getProductById() {
+    void postProduct() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.post("/products")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json))
+                .andExpect(status().isCreated());
     }
 
     @Test
-    void postProduct() {
+    void putProduct() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.post("/products")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json))
+                .andExpect(status().isCreated());
+        mockMvc.perform(MockMvcRequestBuilders.put("/products/" + uuid)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(newJson))
+                .andExpect(status().isCreated());
     }
 
     @Test
-    void putProduct() {
-    }
-
-    @Test
-    void deleteProduct() {
+    void deleteProduct() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.post("/products")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json))
+                .andExpect(status().isCreated());
+        mockMvc.perform(MockMvcRequestBuilders.delete("/products/" + uuid)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json))
+                .andExpect(status().isOk());
     }
 }
