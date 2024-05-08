@@ -7,7 +7,6 @@ import java.util.UUID;
 
 @Entity(name = "products")
 public class Product {
-
     @Id
     @Column(name = "id")
     UUID id;

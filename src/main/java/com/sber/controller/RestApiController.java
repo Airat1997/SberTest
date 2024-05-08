@@ -38,11 +38,10 @@ public class RestApiController {
                 productRepository.save(product), HttpStatus.CREATED)
                 : new ResponseEntity<>(productRepository.save(product), HttpStatus.OK);
     }
+
     @DeleteMapping("{id}")
     ResponseEntity<Void> deleteProduct(@PathVariable UUID id) {
         productRepository.deleteById(id);
         return ResponseEntity.ok().build();
     }
-
-
 }
