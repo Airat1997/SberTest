@@ -24,6 +24,9 @@ public class RestApiController {
      *
      * @return все продукты.
      */
+    public RestApiController(ProductService productService) {
+        this.productService = productService;
+    }
     @GetMapping
     public ResponseEntity<Iterable<Product>> getProducts() {
         return new ResponseEntity<>(productService.findAll(), HttpStatus.OK);

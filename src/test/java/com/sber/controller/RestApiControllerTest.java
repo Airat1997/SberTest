@@ -3,6 +3,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.sber.repository.ProductRepository;
+import com.sber.service.ProductService;
 import java.util.UUID;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -22,7 +23,7 @@ class RestApiControllerTest {
 
     private MockMvc mockMvc;
     @MockBean
-    private ProductRepository productRepository;
+    private ProductService productRepository;
     String uuidString = "0bc1978c-a219-4ccc-adfc-3157910002df";
     UUID uuid = UUID.fromString(uuidString);
     String json = """
