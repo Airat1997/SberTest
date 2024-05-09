@@ -10,8 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 /**
- * REST API контроллер для работы с продуктами.
- * Обеспечивает HTTP запросы для получения, создания, обновления и удаления продуктов.
+ * REST API контроллер для работы с продуктами. Обеспечивает HTTP запросы для получения, создания,
+ * обновления и удаления продуктов.
  */
 @RestController
 @RequestMapping(path = "products")
@@ -65,15 +65,16 @@ public class RestApiController {
     }
 
     /**
-     * Обновляет существующий продукт или создает новый, если продукт с таким идентификатором не существует.
+     * Обновляет существующий продукт или создает новый, если продукт с таким идентификатором не
+     * существует.
      *
-     * @param id Идентификатор продукта.
+     * @param id      Идентификатор продукта.
      * @param product Продукт для обновления или создания.
      * @return ResponseEntity - обновленный или созданный продукт с соответствующим HTTP статусом.
      */
     @PutMapping("{id}")
     public ResponseEntity<Product> putProduct(@PathVariable UUID id, @RequestBody Product product) {
-        return!productService.existsById(id)? new ResponseEntity<>(
+        return !productService.existsById(id) ? new ResponseEntity<>(
                 productService.save(product), HttpStatus.CREATED)
                 : new ResponseEntity<>(productService.save(product), HttpStatus.OK);
     }
@@ -86,7 +87,12 @@ public class RestApiController {
      */
     @DeleteMapping("{id}")
     public ResponseEntity<Void> deleteProduct(@PathVariable UUID id) {
-        productService.deleteById(id);
-        return ResponseEntity.ok().build();
+        if (productService.existsById(id)) {
+            productService.deleteById(id);
+            return ResponseEntity.ok().build();
+        } else {
+            productService.deleteById(id);
+            return ResponseEntity.notFound().build();
+        }
     }
 }

@@ -8,9 +8,10 @@ import org.apache.logging.log4j.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 /**
- * Сервис для работы с продуктами.
- * Обеспечивает основные операции CRUD (создание, чтение, обновление, удаление) для объектов Product.
+ * Сервис для работы с продуктами. Обеспечивает основные операции CRUD (создание, чтение,
+ * обновление, удаление) для объектов Product.
  */
 @Service
 public class ProductService {
@@ -82,8 +83,12 @@ public class ProductService {
      */
     public void deleteById(UUID id) {
         LOGGER.info("Attempting to delete product with ID: {}", id);
-        productRepository.deleteById(id);
-        LOGGER.info("Product deleted with ID: {}", id);
+        if (productRepository.existsById(id)) {
+            productRepository.deleteById(id);
+            LOGGER.info("Product deleted with ID: {}", id);
+        } else {
+            LOGGER.warn("Product with ID: {} not found", id);
+        }
     }
 
     /**
