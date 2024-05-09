@@ -87,12 +87,7 @@ public class RestApiController {
      */
     @DeleteMapping("{id}")
     public ResponseEntity<Void> deleteProduct(@PathVariable UUID id) {
-        if (productService.existsById(id)) {
-            productService.deleteById(id);
-            return ResponseEntity.ok().build();
-        } else {
-            productService.deleteById(id);
-            return ResponseEntity.notFound().build();
-        }
+        productService.deleteById(id);
+        return ResponseEntity.ok().build();
     }
 }

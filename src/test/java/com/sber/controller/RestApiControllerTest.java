@@ -60,12 +60,6 @@ class RestApiControllerTest {
                 .andExpect(status().isNotFound());
     }
 
-//    @Test
-//    void getProductById() throws Exception {
-//        mockMvc.perform(MockMvcRequestBuilders.get("/products/0bc1978c-a219-4ccc-adfc-3157910002df"))
-//                .andExpect(status().isOk());
-//    }
-
     @Test
     void postProduct() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.post("/products")
