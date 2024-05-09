@@ -2,7 +2,9 @@ package com.sber.controller;
 
 import com.sber.model.Product;
 import com.sber.repository.ProductRepository;
+import com.sber.service.ProductService;
 import java.util.UUID;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,16 +16,8 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping(path = "products")
 public class RestApiController {
 
-    private final ProductRepository productRepository;
-
-    /**
-     * Конструктор класса.
-     *
-     * @param productRepository репозиторий продуктов для работы с данными.
-     */
-    public RestApiController(ProductRepository productRepository) {
-        this.productRepository = productRepository;
-    }
+    @Autowired
+    private ProductService productService;
 
     /**
      * Возвращает все продукты.
@@ -32,7 +26,7 @@ public class RestApiController {
      */
     @GetMapping
     public ResponseEntity<Iterable<Product>> getProducts() {
-        return new ResponseEntity<>(productRepository.findAll(), HttpStatus.OK);
+        return new ResponseEntity<>(productService.findAll(), HttpStatus.OK);
     }
 
     /**
@@ -41,8 +35,8 @@ public class RestApiController {
      * @return продукт с указанным идентификатором.
      */
     @GetMapping("{id}")
-    public ResponseEntity<Product> getProductById(@PathVariable("id") Product product) {
-        return new ResponseEntity<>(product, HttpStatus.OK);
+    public ResponseEntity<Product> getProductById(@PathVariable UUID id) {
+        return new ResponseEntity<>(productService.findById(id), HttpStatus.OK);
     }
 
     /**
@@ -53,7 +47,7 @@ public class RestApiController {
      */
     @PostMapping
     public ResponseEntity<Product> postProduct(@RequestBody Product product) {
-        return new ResponseEntity<>(productRepository.save(product), HttpStatus.CREATED);
+        return new ResponseEntity<>(productService.save(product), HttpStatus.CREATED);
     }
 
     /**
@@ -65,9 +59,9 @@ public class RestApiController {
      */
     @PutMapping("{id}")
     public ResponseEntity<Product> putProduct(@PathVariable UUID id, @RequestBody Product product) {
-        return !productRepository.existsById(id) ? new ResponseEntity<>(
-                productRepository.save(product), HttpStatus.CREATED)
-                : new ResponseEntity<>(productRepository.save(product), HttpStatus.OK);
+        return !productService.existsById(id) ? new ResponseEntity<>(
+                productService.save(product), HttpStatus.CREATED)
+                : new ResponseEntity<>(productService.save(product), HttpStatus.OK);
     }
 
     /**
@@ -78,7 +72,7 @@ public class RestApiController {
      */
     @DeleteMapping("{id}")
     public ResponseEntity<Void> deleteProduct(@PathVariable UUID id) {
-        productRepository.deleteById(id);
+        productService.deleteById(id);
         return ResponseEntity.ok().build();
     }
 }
