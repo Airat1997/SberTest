@@ -10,23 +10,33 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 /**
- * Контроллер для работы с продуктами.
+ * REST API контроллер для работы с продуктами.
+ * Обеспечивает HTTP запросы для получения, создания, обновления и удаления продуктов.
  */
 @RestController
 @RequestMapping(path = "products")
 public class RestApiController {
 
+    /**
+     * Сервис для работы с продуктами.
+     */
     @Autowired
-    private ProductService productService;
+    private final ProductService productService;
 
     /**
-     * Возвращает все продукты.
+     * Конструктор контроллера, инициализирует сервис продуктов.
      *
-     * @return все продукты.
+     * @param productService Сервис продуктов для обработки бизнес-логики.
      */
     public RestApiController(ProductService productService) {
         this.productService = productService;
     }
+
+    /**
+     * Возвращает все продукты в виде списка.
+     *
+     * @return ResponseEntity - список всех продуктов с HTTP статусом OK.
+     */
     @GetMapping
     public ResponseEntity<Iterable<Product>> getProducts() {
         return new ResponseEntity<>(productService.findAll(), HttpStatus.OK);
@@ -35,7 +45,8 @@ public class RestApiController {
     /**
      * Возвращает продукт по его идентификатору.
      *
-     * @return продукт с указанным идентификатором.
+     * @param id Идентификатор продукта.
+     * @return ResponseEntity - найденный продукт с HTTP статусом OK.
      */
     @GetMapping("{id}")
     public ResponseEntity<Product> getProductById(@PathVariable UUID id) {
@@ -45,8 +56,8 @@ public class RestApiController {
     /**
      * Создает новый продукт.
      *
-     * @param product продукт для создания.
-     * @return созданный продукт.
+     * @param product Продукт для создания.
+     * @return ResponseEntity - созданный продукт с HTTP статусом CREATED.
      */
     @PostMapping
     public ResponseEntity<Product> postProduct(@RequestBody Product product) {
@@ -54,15 +65,15 @@ public class RestApiController {
     }
 
     /**
-     * Обновляет продукт по его идентификатору или добавляет новый.
+     * Обновляет существующий продукт или создает новый, если продукт с таким идентификатором не существует.
      *
-     * @param id      идентификатор продукта для обновления.
-     * @param product продукт с обновленными данными или новый.
-     * @return обновленный продукт или новый.
+     * @param id Идентификатор продукта.
+     * @param product Продукт для обновления или создания.
+     * @return ResponseEntity - обновленный или созданный продукт с соответствующим HTTP статусом.
      */
     @PutMapping("{id}")
     public ResponseEntity<Product> putProduct(@PathVariable UUID id, @RequestBody Product product) {
-        return !productService.existsById(id) ? new ResponseEntity<>(
+        return!productService.existsById(id)? new ResponseEntity<>(
                 productService.save(product), HttpStatus.CREATED)
                 : new ResponseEntity<>(productService.save(product), HttpStatus.OK);
     }
@@ -70,8 +81,8 @@ public class RestApiController {
     /**
      * Удаляет продукт по его идентификатору.
      *
-     * @param id идентификатор продукта для удаления.
-     * @return статус операции.
+     * @param id Идентификатор продукта для удаления.
+     * @return ResponseEntity - пустой ответ с HTTP статусом OK.
      */
     @DeleteMapping("{id}")
     public ResponseEntity<Void> deleteProduct(@PathVariable UUID id) {
