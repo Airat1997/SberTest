@@ -7,6 +7,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 /**
@@ -81,13 +82,15 @@ public class ProductService {
      *
      * @param id Идентификатор продукта для удаления.
      */
-    public void deleteById(UUID id) {
+    public ResponseEntity<Void> deleteById(UUID id) {
         LOGGER.info("Attempting to delete product with ID: {}", id);
         if (productRepository.existsById(id)) {
             productRepository.deleteById(id);
             LOGGER.info("Product deleted with ID: {}", id);
+            return ResponseEntity.noContent().build();
         } else {
             LOGGER.warn("Product with ID: {} not found", id);
+            return ResponseEntity.notFound().build();
         }
     }
 
